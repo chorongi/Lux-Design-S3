@@ -22,7 +22,7 @@ from luxai_s3.state import (
     gen_state
 )
 from luxai_s3.pygame_render import LuxAIPygameRenderer
-
+jax.config.update("jax_numpy_dtype_promotion", "standard")
 
 class LuxAIS3Env(environment.Environment):
     def __init__(
@@ -696,7 +696,7 @@ class LuxAIS3Env(environment.Environment):
         def team_relic_score(unit_counts_map):
             # not all relic nodes are spawned in yet, but relic nodes map ids are precomputed for all to be spawned relic nodes
             # for efficiency. So we check if the relic node (by id) is spawned in yet. relic nodes mask is always increasing so we can do a simple trick below
-            scores = (unit_counts_map > 0) & (state.relic_nodes_map_weights <= state.relic_nodes_mask.sum() // 2) & (state.relic_nodes_map_weights > 0)
+            scores = (unit_counts_map > 0) & (state.relic_nodes_map_weights <= state.relic_nodes_mask.sum().astype(jnp.int16) // 2) & (state.relic_nodes_map_weights > 0)
             return jnp.sum(scores, dtype=jnp.int32)
 
         # note we need to recompue unit counts since units can get removed due to collisions
@@ -921,7 +921,7 @@ class LuxAIS3Env(environment.Environment):
         """Action space of the environment."""
         low = np.zeros((self.fixed_env_params.max_units, 3))
         low[:, 1:] = -env_params_ranges["unit_sap_range"][-1]
-        high = np.ones((self.fixed_env_params.max_units, 3)) * 5
+        high = np.ones((self.fixed_env_params.max_units, 3)) * 6
         high[:, 1:] = env_params_ranges["unit_sap_range"][-1]
         return spaces.Dict(
             dict(player_0=MultiDiscrete(low, high), player_1=MultiDiscrete(low, high))
