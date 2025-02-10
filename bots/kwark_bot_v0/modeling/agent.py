@@ -12,19 +12,20 @@ Action is defined as a (N, 3) array
 # Action[:, 1, 2] = dx, dy of sap location
 
 Sap
-    * randomized fixed sap range: params.unit_sap_range
-    * params.unit_sap_cost, params.unit_sap_cost * sap drop off factor
-        * params.unit_sap_range >= dx && params.unit_sap_range >= dy
+    * randomized fixed sap range & sap drop off factor: params.unit_sap_range, params.unit_sap_dropoff_factor
+    * Valid Sap: params.unit_sap_range >= dx && params.unit_sap_range >= dy
     * saps only opposing unit
     * Saps neighboring tiles as well (splash damage available)
-??? What is the exact fn for sap damage computation (including splash damage)
-??? What is the distance sap drop off actor
+* Units in the center gets damaged by exact amount of sap_energy
+* Units in the neighboring 8 tiles get sapped by sap_energy * params.unit_sap_dropoff_factor
 """
 
 """
 Unit Creation
 Num of units: self.param_max_units
+A unit is created every 3 steps
 Ids: [0, self.param_max_units - 1]
+Unit is always spawned on [0, 0] for player 0 and [23, 23] for player 1
 """
 
 """
@@ -43,5 +44,4 @@ Draw will destroy all units
 Unit Energy Voids
 Neighboring enemy units will be affected with params.unit_energy_void_factor
 Neighboring tiles (up, down, left, right only) enemy units will decrease energy: params.unit_energy_void_factor * unit_energy
-??? (up, down, left, right only) are affected with energy voids?
 """
