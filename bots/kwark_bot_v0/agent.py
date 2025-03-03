@@ -38,6 +38,21 @@ class Agent:
         team_points = np.array(
             obs["team_points"]
         )  # points of each team, team_points[self.team_id] is the points of the your team
+        if step == 80:
+            print("===============================================")
+            print(obs.keys(), file=sys.stderr)
+            # ['units', 'units_mask', 'sensor_mask', 'map_features', 'relic_nodes', 'relic_nodes_mask', 'team_points', 'team_wins', 'steps', 'match_steps']
+            print(f"units: {obs['units']}", file=sys.stderr)
+            print(f"units_mask: {obs['units_mask']}", file=sys.stderr)
+            print(f"sensor_mask: {obs['sensor_mask']}", file=sys.stderr)
+            print(f"map_features: {obs['map_features']}", file=sys.stderr)
+            print(f"relic_nodes: {obs['relic_nodes']}", file=sys.stderr)
+            print(f"relic_nodes_mask: {obs['relic_nodes_mask']}", file=sys.stderr)
+            print(f"team_points: {obs['team_points']}", file=sys.stderr)
+            print(f"team_wins: {obs['team_wins']}", file=sys.stderr)
+            print(f"steps: {obs['steps']}", file=sys.stderr)
+            print(f"match_steps: {obs['match_steps']}", file=sys.stderr)
+            raise ValueError()
 
         # ids of units you can control at this timestep
         available_unit_ids = np.where(unit_mask)[0]
